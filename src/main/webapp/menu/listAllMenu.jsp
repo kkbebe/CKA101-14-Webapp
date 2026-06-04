@@ -10,7 +10,7 @@
 <body>
 <div class="container">
   <div class="top-bar">
-    <h2>🍜 餐廳菜單管理</h2>
+    <h2>餐廳菜單管理</h2>
     <a href="<%=request.getContextPath()%>/menu/menu.do?action=toAdd" class="btn-add">＋ 新增餐點</a>
   </div>
 
@@ -28,7 +28,7 @@
       <td>$${vo.price}</td>
       <td>
         <c:if test="${not empty vo.imageUrl}">
-          <img src="${vo.imageUrl}" class="img-thumb" alt="圖片">
+          <img src="${pageContext.request.contextPath}/images/${vo.imageUrl}" class="img-thumb" alt="圖片" width="80">
         </c:if>
         <c:if test="${empty vo.imageUrl}">—</c:if>
       </td>

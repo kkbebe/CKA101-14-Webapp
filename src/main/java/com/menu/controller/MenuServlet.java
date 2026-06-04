@@ -146,32 +146,54 @@ public class MenuServlet extends HttpServlet {
 	}
 
 	// ── 修改 ────────────────────────────────────────────────
-	private void update(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	// ── 修改 ────────────────────────────────────────────────
+		private void update(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-		String itemIdStr = req.getParameter("itemId");
-		String categoryIdStr = req.getParameter("categoryId");
-		String itemName = req.getParameter("itemName");
-		String itemDesc = req.getParameter("itemDesc");
-		String priceStr = req.getParameter("price");
-		String imageUrl = req.getParameter("imageUrl");
-		String sortOrderStr = req.getParameter("sortOrder");
+			String itemIdStr = req.getParameter("itemId");
+			String categoryIdStr = req.getParameter("categoryId");
+			String itemName = req.getParameter("itemName");
+			String itemDesc = req.getParameter("itemDesc");
+			String priceStr = req.getParameter("price");
+			String imageUrl = req.getParameter("imageUrl");
+			String sortOrderStr = req.getParameter("sortOrder");
 
-		List<String> errors = validate(categoryIdStr, itemName, priceStr, sortOrderStr);
+			// 1. 前端基本欄位驗證
+			List<String> errors = validate(categoryIdStr, itemName, priceStr, sortOrderStr);
 
-		if (!errors.isEmpty()) {
+			if (!errors.isEmpty()) {
+				MenuVO vo = buildVO(Integer.parseInt(itemIdStr), categoryIdStr, itemName, itemDesc, priceStr, imageUrl,
+						sortOrderStr);
+				req.setAttribute("errors", errors);
+				req.setAttribute("menuVO", vo);
+				req.getRequestDispatcher("/menu/updateMenu.jsp").forward(req, res);
+				return;
+			}
+
+			// 2. 如果通過基本驗證，才去組 VO 並執行更新
 			MenuVO vo = buildVO(Integer.parseInt(itemIdStr), categoryIdStr, itemName, itemDesc, priceStr, imageUrl,
 					sortOrderStr);
-			req.setAttribute("errors", errors);
-			req.setAttribute("menuVO", vo);
-			req.getRequestDispatcher("/menu/updateMenu.jsp").forward(req, res);
-			return;
+			
+			try {
+				// ⚡ 核心改變：用 try 包住可能因為資料庫外鍵不存在而爆炸的這行代碼
+				svc.updateMenu(vo);
+				
+				// 修改成功，重導向到列表頁
+				res.sendRedirect(req.getContextPath() + "/menu/menu.do?action=getAll");
+				
+			} catch (RuntimeException e) {
+				// ⚡ 捕捉從 MenuJDBCDAO 丟出來的 "修改失敗" 異常！
+				
+				// 把錯誤訊息塞進 errors 清單
+				errors.add("修改失敗：您輸入的「分類編號 (" + categoryIdStr + ")」不存在，請先確認是否有該分類！");
+				
+				// 將剛剛填寫的資料與錯誤訊息打包送回前端，讓網頁不會變空白
+				req.setAttribute("errors", errors);
+				req.setAttribute("menuVO", vo);
+				
+				// 轉發回原本的修改頁面
+				req.getRequestDispatcher("/menu/updateMenu.jsp").forward(req, res);
+			}
 		}
-
-		MenuVO vo = buildVO(Integer.parseInt(itemIdStr), categoryIdStr, itemName, itemDesc, priceStr, imageUrl,
-				sortOrderStr);
-		svc.updateMenu(vo);
-		res.sendRedirect(req.getContextPath() + "/menu/menu.do?action=getAll");
-	}
 
 	// ── 刪除 ────────────────────────────────────────────────
 	private void delete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

@@ -12,7 +12,7 @@
 <body bgcolor='white'>
 
 <table id="table-1">
-   <tr><td><h3>🍜 餐廳菜單管理: Home</h3><h4>( MVC )</h4></td></tr>
+   <tr><td><h3>餐廳菜單管理: Home</h3><h4>( MVC )</h4></td></tr>
 </table>
 
 <p>This is the Home page for 餐廳菜單管理</p>

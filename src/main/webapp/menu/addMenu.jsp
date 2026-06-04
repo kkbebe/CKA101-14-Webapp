@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="box">
-  <h2>➕ 新增餐點</h2>
+  <h2>新增餐點</h2>
 
   <c:if test="${not empty errors}">
   <ul class="error-list">

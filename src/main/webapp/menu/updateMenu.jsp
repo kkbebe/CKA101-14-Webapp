@@ -34,16 +34,12 @@
     <label>價格 *</label>
     <input type="number" name="price" value="${menuVO.price}" step="0.01" min="0">
 	<br>
-    <label>圖片網址</label>
-    <input type="text" name="imageUrl" value="${menuVO.imageUrl}" id="imgInput"
-           oninput="previewImg(this.value)">
-    <c:if test="${not empty menuVO.imageUrl}">
-      <img id="imgPreview" src="${menuVO.imageUrl}" class="img-preview" alt="預覽">
-    </c:if>
-    <c:if test="${empty menuVO.imageUrl}">
-      <img id="imgPreview" src="" class="img-preview" alt="預覽" style="display:none">
-    </c:if>
+    <label>圖片檔名或網址</label>
+<%-- 1. 移除了 oninput="previewImg(this.value)" --%>
+<input type="text" name="imageUrl" value="${menuVO.imageUrl}" id="imgInput">
 
+<%-- 2. 原本底下的 <c:if> 預覽圖片標籤已全部刪除 --%>
+	<br>
     <label>排序</label>
     <input type="number" name="sortOrder" value="${menuVO.sortOrder}" min="0">
 
