@@ -8,7 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-//test
+//test1
 public class MenuServlet extends HttpServlet {
 
 	private MenuService svc = new MenuService();
